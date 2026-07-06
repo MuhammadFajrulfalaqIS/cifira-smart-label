@@ -15,18 +15,17 @@
         <span class="brand-mark">C</span>
         <span><strong>CiFiRa</strong><small>Smart Meat Label</small></span>
       </div>
-      <div class="nav-actions"><a class="nav-button" href="#cek-warna">Cek Status</a><a class="nav-button" href="#generator-qr">Generate QR</a></div>
+      <div class="nav-actions"><a class="nav-button" href="#cek-warna">Cek Status</a><a class="nav-button" href="#deteksi-kamera">Scan Kamera</a></div>
     </nav>
 
     <section class="hero-grid">
       <div class="hero-text">
         <p class="eyebrow">Kemasan cerdas pendeteksi kebusukan daging</p>
         <h1>Scan QR, baca status daging.</h1>
-        <p class="lead">Website ini bisa membaca status dari parameter QR, pilihan warna manual, atau deteksi warna film memakai kamera HP.</p>
+        <p class="lead">Website ini bisa membaca status dari parameter QR, pilihan warna manual, deteksi warna film, atau scan QR langsung memakai kamera HP.</p>
         <div class="hero-actions">
-          <a class="primary" href="#deteksi-kamera">Deteksi Kamera</a>
+          <a class="primary" href="#deteksi-kamera">Scan Kamera</a>
           <a class="secondary" href="#qr-mode">Mode QR Langsung</a>
-          <a class="secondary" href="#generator-qr">Generate QR</a>
         </div>
       </div>
       <div class="phone-card" aria-label="Ilustrasi pemindaian label daging">
@@ -87,8 +86,8 @@
     <section id="deteksi-kamera" class="section camera-section">
       <div class="section-head compact">
         <p class="eyebrow">Mode realistis untuk satu QR</p>
-        <h2>Deteksi Warna Film dengan Kamera HP</h2>
-        <p>Scan QR umum, izinkan kamera, lalu arahkan kotak tengah ke film indikator pada label daging. Website akan membaca warna dominan dan menampilkan kategori.</p>
+        <h2>Scan Kamera: Deteksi Warna Film & QR</h2>
+        <p>Izinkan kamera, lalu arahkan kotak tengah ke film indikator untuk membaca warna, atau arahkan ke QR CiFiRa untuk membaca status yang tersimpan di link QR.</p>
       </div>
       <div class="camera-grid">
         <div class="camera-box">
@@ -101,15 +100,17 @@
           <h3>Cara pakai kamera</h3>
           <ol>
             <li>Tekan <strong>Aktifkan Kamera</strong>.</li>
-            <li>Arahkan kotak tengah ke bagian film CiFiRa, bukan ke dagingnya.</li>
-            <li>Tekan <strong>Deteksi Warna</strong>.</li>
+            <li>Untuk warna: arahkan kotak tengah ke bagian film CiFiRa, bukan ke dagingnya.</li>
+            <li>Untuk QR: arahkan kotak tengah ke kode QR sampai terlihat jelas.</li>
+            <li>Tekan <strong>Deteksi Warna</strong> atau <strong>Scan QR</strong>.</li>
           </ol>
           <div class="button-row">
             <button id="start-camera" class="primary button-like" type="button">Aktifkan Kamera</button>
             <button id="detect-color" class="secondary button-like" type="button">Deteksi Warna</button>
+            <button id="detect-qr" class="secondary button-like" type="button">Scan QR</button>
           </div>
-          <p id="camera-result" class="camera-result">Hasil deteksi akan muncul di sini.</p>
-          <p class="fineprint">Catatan: hasil kamera dapat dipengaruhi cahaya ruangan. Untuk pameran, gunakan lampu putih stabil agar warna terbaca lebih konsisten.</p>
+          <p id="camera-result" class="camera-result">Hasil deteksi warna atau QR akan muncul di sini.</p>
+          <p class="fineprint">Catatan: hasil warna dipengaruhi cahaya ruangan. Untuk scan QR, pastikan QR terang, tidak blur, dan seluruh kotak QR masuk ke kamera.</p>
         </div>
       </div>
     </section>
@@ -145,55 +146,6 @@
     </section>
 
 
-
-    <section id="generator-qr" class="section generator-section">
-      <div class="section-head compact">
-        <p class="eyebrow">Generate QR otomatis</p>
-        <h2>Buat QR Sesuai Hasil Kesegaran</h2>
-        <p>Pilih kategori hasil pengamatan, lalu website akan membuat QR baru. Saat QR itu discan lagi, halaman langsung membuka kategori yang sama, sehingga pengguna langsung tahu daging masih segar, mulai menurun, atau tidak layak konsumsi.</p>
-      </div>
-
-      <div class="generator-grid">
-        <div class="generator-form">
-          <label for="qr-base-url">Link website Vercel/Netlify</label>
-          <div class="input-row">
-            <input id="qr-base-url" type="url" placeholder="https://cifira-smart-label.vercel.app" />
-            <button id="use-current-url" type="button" class="secondary button-like small-button">Pakai link ini</button>
-          </div>
-          <p class="fineprint">Setelah website sudah online di Vercel, isi kolom ini dengan link Vercel kamu. Kalau dibuka dari Vercel, tombol “Pakai link ini” akan mengisi otomatis.</p>
-
-          <label for="qr-status-select">Kategori yang akan disimpan di QR</label>
-          <select id="qr-status-select">
-            <option value="current">Ikuti status yang tampil sekarang</option>
-            <option value="umum">QR umum — buka website utama</option>
-            <option value="segar">Segar — ungu</option>
-            <option value="menurun">Mulai menurun / waspada — biru</option>
-            <option value="tidak-layak">Tidak layak konsumsi / busuk — hijau</option>
-          </select>
-
-          <div class="button-row">
-            <button id="generate-browser-qr" type="button" class="primary button-like">Generate QR</button>
-            <button id="generate-current-status" type="button" class="secondary button-like">Generate dari hasil saat ini</button>
-          </div>
-
-          <div class="generated-link-box">
-            <strong>Link yang masuk ke QR:</strong>
-            <code id="generated-qr-link">Belum dibuat</code>
-          </div>
-        </div>
-
-        <div class="qr-preview-card">
-          <p class="status-label">Preview QR</p>
-          <div class="qr-preview-frame">
-            <img id="generated-qr-image" alt="Preview QR CiFiRa" />
-            <span id="qr-empty-state">Klik Generate QR</span>
-          </div>
-          <a id="download-qr-link" class="primary download-link" href="#" target="_blank" rel="noopener">Buka / Download QR</a>
-          <p id="qr-generator-note" class="fineprint">QR kategori akan menyimpan hasil pada URL, misalnya <strong>?status=tidak-layak</strong>. Jadi saat discan ulang, status langsung muncul.</p>
-        </div>
-      </div>
-    </section>
-
     <section id="cara-pakai" class="section steps-section">
       <div class="section-head compact">
         <p class="eyebrow">Arah label daging</p>
@@ -215,7 +167,7 @@
         <div class="step">
           <span>3</span>
           <h3>Scan dan baca status</h3>
-          <p>Untuk pameran, gunakan QR berparameter. Untuk pemakaian nyata, gunakan QR umum lalu deteksi warna film dengan kamera.</p>
+          <p>Untuk pameran, gunakan QR berparameter. Untuk pemakaian nyata, gunakan QR umum lalu scan QR atau deteksi warna film dengan kamera.</p>
         </div>
       </div>
     </section>

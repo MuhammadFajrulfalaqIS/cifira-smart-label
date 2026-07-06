@@ -67,6 +67,7 @@ const placeholder = document.getElementById('camera-placeholder');
 const cameraResult = document.getElementById('camera-result');
 const startBtn = document.getElementById('start-camera');
 const detectBtn = document.getElementById('detect-color');
+const detectQrBtn = document.getElementById('detect-qr');
 let stream = null;
 
 async function startCamera(){
@@ -141,86 +142,61 @@ function detectColor(){
   }
 }
 
-startBtn?.addEventListener('click', startCamera);
-detectBtn?.addEventListener('click', detectColor);
 
+function getStatusFromQrText(text){
+  const raw = (text || '').trim();
+  if(!raw) return {status:'', payload:''};
 
-// Generator QR langsung dari website
-const qrBaseInput = document.getElementById('qr-base-url');
-const qrStatusSelect = document.getElementById('qr-status-select');
-const generatedQrLink = document.getElementById('generated-qr-link');
-const generatedQrImage = document.getElementById('generated-qr-image');
-const qrEmptyState = document.getElementById('qr-empty-state');
-const downloadQrLink = document.getElementById('download-qr-link');
-const generateBrowserQrBtn = document.getElementById('generate-browser-qr');
-const generateCurrentStatusBtn = document.getElementById('generate-current-status');
-const useCurrentUrlBtn = document.getElementById('use-current-url');
-const qrGeneratorNote = document.getElementById('qr-generator-note');
-
-function cleanBaseUrl(raw){
+  // QR bisa berupa URL seperti https://.../?status=segar
   try{
-    const url = new URL(raw || window.location.href);
-    url.search = '';
-    url.hash = '';
-    return url.toString().replace(/\/$/, '/');
+    const url = new URL(raw);
+    const status = normalizeStatus(url.searchParams.get('status') || url.searchParams.get('warna') || url.searchParams.get('kategori'));
+    return {status, payload: raw};
   }catch(err){
-    return '';
+    // QR juga boleh hanya berisi teks: segar / menurun / tidak-layak
+    return {status: normalizeStatus(raw), payload: raw};
   }
 }
 
-function buildStatusUrl(base, status){
-  const clean = cleanBaseUrl(base);
-  if(!clean) return '';
-  if(status === 'umum') return clean;
-  const url = new URL(clean);
-  url.searchParams.set('status', status);
-  return url.toString();
-}
-
-function getSelectedQrStatus(){
-  const selected = qrStatusSelect?.value || 'current';
-  return selected === 'current' ? currentStatus : selected;
-}
-
-function makeQrApiUrl(targetUrl){
-  return `https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=16&data=${encodeURIComponent(targetUrl)}`;
-}
-
-function generateBrowserQr(forcedStatus = ''){
-  if(!qrBaseInput) return;
-  const status = forcedStatus || getSelectedQrStatus();
-  const targetUrl = buildStatusUrl(qrBaseInput.value || window.location.href, status);
-  if(!targetUrl){
-    generatedQrLink.textContent = 'Link website belum valid.';
+async function detectQrCode(){
+  if(!video.srcObject || video.readyState < 2){
+    cameraResult.textContent = 'Aktifkan kamera terlebih dahulu.';
     return;
   }
-  const qrUrl = makeQrApiUrl(targetUrl);
-  generatedQrLink.textContent = targetUrl;
-  generatedQrImage.src = qrUrl;
-  generatedQrImage.style.display = 'block';
-  qrEmptyState.style.display = 'none';
-  downloadQrLink.href = qrUrl;
-  downloadQrLink.style.pointerEvents = 'auto';
-  downloadQrLink.style.opacity = '1';
 
-  const label = status === 'umum' ? 'QR umum' : statusData[status]?.title || 'Kategori CiFiRa';
-  qrGeneratorNote.innerHTML = status === 'umum'
-    ? 'QR umum membuka website utama. Setelah itu pengguna dapat memilih warna atau memakai kamera pembaca warna.'
-    : `QR ini menyimpan hasil <strong>${label}</strong>. Saat QR discan ulang, website langsung membuka status tersebut.`;
+  if(!('BarcodeDetector' in window)){
+    cameraResult.textContent = 'Browser ini belum mendukung scan QR dari website. Coba buka di Chrome Android/Edge terbaru, atau scan QR memakai kamera bawaan HP.';
+    return;
+  }
+
+  try{
+    const ctx = canvas.getContext('2d', {willReadFrequently:true});
+    const w = canvas.width, h = canvas.height;
+    ctx.drawImage(video, 0, 0, w, h);
+
+    const detector = new BarcodeDetector({formats: ['qr_code']});
+    const codes = await detector.detect(canvas);
+
+    if(!codes.length){
+      cameraResult.textContent = 'QR belum terbaca. Dekatkan kamera, pastikan QR tidak blur, dan masukkan seluruh kotak QR ke area kamera.';
+      return;
+    }
+
+    const payload = codes[0].rawValue || '';
+    const result = getStatusFromQrText(payload);
+
+    if(result.status){
+      setStatus(result.status, `Status terbaca dari QR kamera. Isi QR: ${result.payload}`);
+      cameraResult.textContent = `QR terbaca. Status: ${statusData[result.status].title}.`;
+      document.getElementById('cek-warna').scrollIntoView({behavior:'smooth'});
+    }else{
+      cameraResult.textContent = `QR terbaca, tetapi belum ada kategori CiFiRa. Isi QR: ${payload}`;
+    }
+  }catch(err){
+    cameraResult.textContent = 'Scan QR gagal. Coba ulangi dengan QR lebih terang dan posisi kamera lebih stabil.';
+  }
 }
 
-useCurrentUrlBtn?.addEventListener('click', () => {
-  qrBaseInput.value = cleanBaseUrl(window.location.href);
-});
-
-generateBrowserQrBtn?.addEventListener('click', () => generateBrowserQr());
-generateCurrentStatusBtn?.addEventListener('click', () => {
-  qrStatusSelect.value = 'current';
-  generateBrowserQr(currentStatus);
-});
-
-if(qrBaseInput){
-  qrBaseInput.value = cleanBaseUrl(window.location.href);
-  downloadQrLink.style.pointerEvents = 'none';
-  downloadQrLink.style.opacity = '.55';
-}
+startBtn?.addEventListener('click', startCamera);
+detectBtn?.addEventListener('click', detectColor);
+detectQrBtn?.addEventListener('click', detectQrCode);
