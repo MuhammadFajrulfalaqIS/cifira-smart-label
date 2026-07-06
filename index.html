@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CiFiRa Smart Packaging | Label Kesegaran Daging</title>
+  <meta name="description" content="Website interpretasi warna CiFiRa untuk mendeteksi kesegaran daging melalui halochromic edible film dan QR code." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="assets/favicon.svg" />
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav">
+      <div class="brand">
+        <span class="brand-mark">C</span>
+        <span><strong>CiFiRa</strong><small>Smart Meat Label</small></span>
+      </div>
+      <a class="nav-button" href="#cek-warna">Cek Status</a>
+    </nav>
+
+    <section class="hero-grid">
+      <div class="hero-text">
+        <p class="eyebrow">Kemasan cerdas pendeteksi kebusukan daging</p>
+        <h1>Scan QR, baca status daging.</h1>
+        <p class="lead">Website ini bisa membaca status dari parameter QR, pilihan warna manual, atau deteksi warna film memakai kamera HP.</p>
+        <div class="hero-actions">
+          <a class="primary" href="#deteksi-kamera">Deteksi Kamera</a>
+          <a class="secondary" href="#qr-mode">Mode QR Langsung</a>
+        </div>
+      </div>
+      <div class="phone-card" aria-label="Ilustrasi pemindaian label daging">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="screen">
+            <p class="mini-title">Scan QR CiFiRa</p>
+            <div class="qr-mini"></div>
+            <p class="mini-copy">QR membuka website. Status bisa langsung muncul jika QR diberi parameter kategori.</p>
+          </div>
+        </div>
+        <div class="floating-chip purple">Ungu = Segar</div>
+        <div class="floating-chip blue">Biru = Waspada</div>
+        <div class="floating-chip green">Hijau = Tidak Layak</div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section id="cek-warna" class="section check-section">
+      <div class="section-head">
+        <p class="eyebrow">Hasil pembacaan</p>
+        <h2>Status Kesegaran Daging</h2>
+        <p id="source-note">Scan QR atau pilih warna yang paling mirip dengan film indikator CiFiRa pada kemasan daging.</p>
+      </div>
+
+      <article id="status-panel" class="status-panel segar" aria-live="polite">
+        <div>
+          <p class="status-label">Status</p>
+          <h3 id="status-title">Daging Masih Segar</h3>
+          <p id="status-desc">Warna ungu menunjukkan kondisi awal daging yang masih segar dan cenderung sedikit asam.</p>
+        </div>
+        <div class="status-metrics">
+          <span><b id="status-ph">pH ±6</b><small>perkiraan pH</small></span>
+          <span><b id="status-action">Boleh diolah</b><small>saran tindakan</small></span>
+        </div>
+      </article>
+
+      <div class="color-picker" role="list" aria-label="Pilihan warna label">
+        <button class="color-card active" data-status="segar" role="listitem">
+          <span class="swatch swatch-purple"></span>
+          <strong>Ungu</strong>
+          <small>Segar</small>
+        </button>
+        <button class="color-card" data-status="menurun" role="listitem">
+          <span class="swatch swatch-blue"></span>
+          <strong>Biru / Biru Keunguan</strong>
+          <small>Mulai menurun</small>
+        </button>
+        <button class="color-card" data-status="tidak-layak" role="listitem">
+          <span class="swatch swatch-green"></span>
+          <strong>Hijau / Hijau Kekuningan</strong>
+          <small>Tidak layak</small>
+        </button>
+      </div>
+    </section>
+
+    <section id="deteksi-kamera" class="section camera-section">
+      <div class="section-head compact">
+        <p class="eyebrow">Mode realistis untuk satu QR</p>
+        <h2>Deteksi Warna Film dengan Kamera HP</h2>
+        <p>Scan QR umum, izinkan kamera, lalu arahkan kotak tengah ke film indikator pada label daging. Website akan membaca warna dominan dan menampilkan kategori.</p>
+      </div>
+      <div class="camera-grid">
+        <div class="camera-box">
+          <video id="camera-video" playsinline muted></video>
+          <canvas id="camera-canvas" width="320" height="240"></canvas>
+          <div class="target-box"></div>
+          <p id="camera-placeholder">Kamera belum aktif</p>
+        </div>
+        <div class="camera-controls">
+          <h3>Cara pakai kamera</h3>
+          <ol>
+            <li>Tekan <strong>Aktifkan Kamera</strong>.</li>
+            <li>Arahkan kotak tengah ke bagian film CiFiRa, bukan ke dagingnya.</li>
+            <li>Tekan <strong>Deteksi Warna</strong>.</li>
+          </ol>
+          <div class="button-row">
+            <button id="start-camera" class="primary button-like" type="button">Aktifkan Kamera</button>
+            <button id="detect-color" class="secondary button-like" type="button">Deteksi Warna</button>
+          </div>
+          <p id="camera-result" class="camera-result">Hasil deteksi akan muncul di sini.</p>
+          <p class="fineprint">Catatan: hasil kamera dapat dipengaruhi cahaya ruangan. Untuk pameran, gunakan lampu putih stabil agar warna terbaca lebih konsisten.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="qr-mode" class="section qr-section">
+      <div class="section-head compact">
+        <p class="eyebrow">Mode QR langsung</p>
+        <h2>QR Bisa Langsung Menampilkan Kategori</h2>
+        <p>QR statis tidak bisa berubah sendiri mengikuti warna film. Agar setelah discan langsung muncul kategori, gunakan URL dengan parameter status.</p>
+      </div>
+      <div class="qr-cards">
+        <div class="qr-card">
+          <strong>QR umum / realistis</strong>
+          <code>https://website-kamu.netlify.app/</code>
+          <p>Membuka halaman utama. Konsumen mencocokkan warna atau memakai kamera.</p>
+        </div>
+        <div class="qr-card">
+          <strong>QR segar</strong>
+          <code>https://website-kamu.netlify.app/?status=segar</code>
+          <p>Saat discan langsung muncul status daging masih segar.</p>
+        </div>
+        <div class="qr-card">
+          <strong>QR waspada</strong>
+          <code>https://website-kamu.netlify.app/?status=menurun</code>
+          <p>Saat discan langsung muncul status kualitas mulai menurun.</p>
+        </div>
+        <div class="qr-card">
+          <strong>QR busuk</strong>
+          <code>https://website-kamu.netlify.app/?status=tidak-layak</code>
+          <p>Saat discan langsung muncul status tidak layak konsumsi.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="cara-pakai" class="section steps-section">
+      <div class="section-head compact">
+        <p class="eyebrow">Arah label daging</p>
+        <h2>Cara Menempatkan Label CiFiRa</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span>1</span>
+          <h3>Tempel film indikator</h3>
+          <p>Letakkan edible film CiFiRa dekat permukaan daging agar dapat merespons perubahan pH dan amonia.</p>
+        </div>
+        <div class="step arrow-step">→</div>
+        <div class="step">
+          <span>2</span>
+          <h3>Tempel QR di luar kemasan</h3>
+          <p>QR ditempatkan di label luar agar mudah dipindai kamera HP tanpa membuka kemasan.</p>
+        </div>
+        <div class="step arrow-step">→</div>
+        <div class="step">
+          <span>3</span>
+          <h3>Scan dan baca status</h3>
+          <p>Untuk pameran, gunakan QR berparameter. Untuk pemakaian nyata, gunakan QR umum lalu deteksi warna film dengan kamera.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="ringkasan" class="section data-section">
+      <div class="section-head compact">
+        <p class="eyebrow">Ringkasan hasil</p>
+        <h2>Data Pengamatan CiFiRa</h2>
+        <p>Ringkasan ini disesuaikan dengan hasil pengamatan pada daging sapi selama 48 jam.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Waktu</th>
+              <th>Warna Film</th>
+              <th>pH Daging</th>
+              <th>Uji Eber</th>
+              <th>Interpretasi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0 jam</td>
+              <td><span class="dot purple-dot"></span>Ungu</td>
+              <td>6</td>
+              <td>Negatif</td>
+              <td>Sangat segar</td>
+            </tr>
+            <tr>
+              <td>16 jam</td>
+              <td><span class="dot blue-dot"></span>Biru keunguan</td>
+              <td>6–7</td>
+              <td>Negatif</td>
+              <td>Mulai menurun</td>
+            </tr>
+            <tr>
+              <td>24 jam</td>
+              <td><span class="dot blue-dot"></span>Biru</td>
+              <td>7</td>
+              <td>Positif</td>
+              <td>Titik kritis kebusukan</td>
+            </tr>
+            <tr>
+              <td>40 jam</td>
+              <td><span class="dot green-dot"></span>Hijau</td>
+              <td>8</td>
+              <td>Positif</td>
+              <td>Busuk</td>
+            </tr>
+            <tr>
+              <td>48 jam</td>
+              <td><span class="dot yellowgreen-dot"></span>Hijau kekuningan</td>
+              <td>8</td>
+              <td>Positif</td>
+              <td>Sangat busuk</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section warning-section">
+      <div class="warning-card">
+        <h2>Peringatan Keamanan Pangan</h2>
+        <p>Jangan konsumsi daging jika muncul bau busuk kuat, lendir, bercak jamur, atau warna label menunjukkan hijau/hijau kekuningan.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>CiFiRa</strong> — Halochromic Edible Film berbasis pektin kulit jeruk dan antosianin bunga telang.</p>
+    <p class="fineprint">Prototipe edukasi untuk penelitian OPSI. Data dapat disesuaikan kembali sesuai hasil uji terbaru.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

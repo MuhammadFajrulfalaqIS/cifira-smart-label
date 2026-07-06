@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <rect width="1600" height="1000" fill="#fff7e8"/>
+  <rect x="60" y="60" width="1480" height="880" rx="48" fill="#fff" stroke="#ead8c0" stroke-width="4"/>
+  <rect x="90" y="90" width="1420" height="145" rx="34" fill="#16213e"/>
+  <text x="135" y="170" fill="#fff" font-size="76" font-family="Arial, sans-serif" font-weight="700">CiFiRa Smart Meat Label</text>
+  <text x="138" y="210" fill="#ffe7b8" font-size="26" font-family="Arial, sans-serif">Kemasan cerdas pendeteksi kebusukan daging</text>
+  <rect x="130" y="330" width="85" height="80" rx="20" fill="#7c3aed"/><text x="240" y="382" fill="#16213e" font-size="38" font-family="Arial, sans-serif" font-weight="700">UNGU = SEGAR</text>
+  <rect x="130" y="435" width="85" height="80" rx="20" fill="#2563eb"/><text x="240" y="487" fill="#16213e" font-size="38" font-family="Arial, sans-serif" font-weight="700">BIRU = WASPADA</text>
+  <rect x="130" y="540" width="85" height="80" rx="20" fill="#16a34a"/><text x="240" y="592" fill="#16213e" font-size="38" font-family="Arial, sans-serif" font-weight="700">HIJAU = TIDAK LAYAK</text>
+  <line x1="660" y1="485" x2="990" y2="485" stroke="#f59e0b" stroke-width="18" stroke-linecap="round"/><polygon points="990,485 925,445 925,525" fill="#f59e0b"/>
+  <text x="675" y="565" fill="#5b6278" font-size="32" font-family="Arial, sans-serif">Cocokkan warna film</text>
+  <text x="720" y="605" fill="#5b6278" font-size="32" font-family="Arial, sans-serif">lalu scan QR</text>
+  <rect x="1080" y="300" width="390" height="390" rx="38" fill="#fff" stroke="#16213e" stroke-width="3"/>
+  <rect x="1120" y="340" width="310" height="310" fill="#f3f4f6" stroke="#d1d5db" stroke-width="3"/>
+  <text x="1160" y="485" fill="#16213e" font-size="38" font-family="Arial, sans-serif" font-weight="700">QR FINAL</text>
+  <text x="1135" y="535" fill="#5b6278" font-size="26" font-family="Arial, sans-serif">setelah website diupload</text>
+  <text x="1110" y="740" fill="#16213e" font-size="38" font-family="Arial, sans-serif" font-weight="700">SCAN QR</text>
+  <text x="1070" y="790" fill="#5b6278" font-size="26" font-family="Arial, sans-serif">Buka website interpretasi warna</text>
+  <rect x="120" y="810" width="1360" height="90" rx="28" fill="#fff2dc"/>
+  <text x="160" y="868" fill="#16213e" font-size="34" font-family="Arial, sans-serif">Film indikator: ditempel dekat daging • QR: ditempel di luar kemasan</text>
+</svg>
