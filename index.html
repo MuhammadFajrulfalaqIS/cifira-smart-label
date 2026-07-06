@@ -15,7 +15,7 @@
         <span class="brand-mark">C</span>
         <span><strong>CiFiRa</strong><small>Smart Meat Label</small></span>
       </div>
-      <a class="nav-button" href="#cek-warna">Cek Status</a>
+      <div class="nav-actions"><a class="nav-button" href="#cek-warna">Cek Status</a><a class="nav-button" href="#generator-qr">Generate QR</a></div>
     </nav>
 
     <section class="hero-grid">
@@ -26,6 +26,7 @@
         <div class="hero-actions">
           <a class="primary" href="#deteksi-kamera">Deteksi Kamera</a>
           <a class="secondary" href="#qr-mode">Mode QR Langsung</a>
+          <a class="secondary" href="#generator-qr">Generate QR</a>
         </div>
       </div>
       <div class="phone-card" aria-label="Ilustrasi pemindaian label daging">
@@ -139,6 +140,56 @@
           <strong>QR busuk</strong>
           <code>https://website-kamu.netlify.app/?status=tidak-layak</code>
           <p>Saat discan langsung muncul status tidak layak konsumsi.</p>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section id="generator-qr" class="section generator-section">
+      <div class="section-head compact">
+        <p class="eyebrow">Generate QR otomatis</p>
+        <h2>Buat QR Sesuai Hasil Kesegaran</h2>
+        <p>Pilih kategori hasil pengamatan, lalu website akan membuat QR baru. Saat QR itu discan lagi, halaman langsung membuka kategori yang sama, sehingga pengguna langsung tahu daging masih segar, mulai menurun, atau tidak layak konsumsi.</p>
+      </div>
+
+      <div class="generator-grid">
+        <div class="generator-form">
+          <label for="qr-base-url">Link website Vercel/Netlify</label>
+          <div class="input-row">
+            <input id="qr-base-url" type="url" placeholder="https://cifira-smart-label.vercel.app" />
+            <button id="use-current-url" type="button" class="secondary button-like small-button">Pakai link ini</button>
+          </div>
+          <p class="fineprint">Setelah website sudah online di Vercel, isi kolom ini dengan link Vercel kamu. Kalau dibuka dari Vercel, tombol “Pakai link ini” akan mengisi otomatis.</p>
+
+          <label for="qr-status-select">Kategori yang akan disimpan di QR</label>
+          <select id="qr-status-select">
+            <option value="current">Ikuti status yang tampil sekarang</option>
+            <option value="umum">QR umum — buka website utama</option>
+            <option value="segar">Segar — ungu</option>
+            <option value="menurun">Mulai menurun / waspada — biru</option>
+            <option value="tidak-layak">Tidak layak konsumsi / busuk — hijau</option>
+          </select>
+
+          <div class="button-row">
+            <button id="generate-browser-qr" type="button" class="primary button-like">Generate QR</button>
+            <button id="generate-current-status" type="button" class="secondary button-like">Generate dari hasil saat ini</button>
+          </div>
+
+          <div class="generated-link-box">
+            <strong>Link yang masuk ke QR:</strong>
+            <code id="generated-qr-link">Belum dibuat</code>
+          </div>
+        </div>
+
+        <div class="qr-preview-card">
+          <p class="status-label">Preview QR</p>
+          <div class="qr-preview-frame">
+            <img id="generated-qr-image" alt="Preview QR CiFiRa" />
+            <span id="qr-empty-state">Klik Generate QR</span>
+          </div>
+          <a id="download-qr-link" class="primary download-link" href="#" target="_blank" rel="noopener">Buka / Download QR</a>
+          <p id="qr-generator-note" class="fineprint">QR kategori akan menyimpan hasil pada URL, misalnya <strong>?status=tidak-layak</strong>. Jadi saat discan ulang, status langsung muncul.</p>
         </div>
       </div>
     </section>
