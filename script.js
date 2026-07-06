@@ -147,10 +147,13 @@ function getStatusFromQrText(text){
   const raw = (text || '').trim();
   if(!raw) return {status:'', payload:''};
 
-  // QR bisa berupa URL seperti https://.../?status=segar
   try{
     const url = new URL(raw);
-    const status = normalizeStatus(url.searchParams.get('status') || url.searchParams.get('warna') || url.searchParams.get('kategori'));
+    const status = normalizeStatus(
+      url.searchParams.get('status') ||
+      url.searchParams.get('warna') ||
+      url.searchParams.get('kategori')
+    );
     return {status, payload: raw};
   }catch(err){
     // QR juga boleh hanya berisi teks: segar / menurun / tidak-layak
@@ -171,7 +174,8 @@ async function detectQrCode(){
 
   try{
     const ctx = canvas.getContext('2d', {willReadFrequently:true});
-    const w = canvas.width, h = canvas.height;
+    const w = canvas.width;
+    const h = canvas.height;
     ctx.drawImage(video, 0, 0, w, h);
 
     const detector = new BarcodeDetector({formats: ['qr_code']});
@@ -200,3 +204,84 @@ async function detectQrCode(){
 startBtn?.addEventListener('click', startCamera);
 detectBtn?.addEventListener('click', detectColor);
 detectQrBtn?.addEventListener('click', detectQrCode);
+
+
+// Generator QR langsung dari website
+const qrBaseInput = document.getElementById('qr-base-url');
+const qrStatusSelect = document.getElementById('qr-status-select');
+const generatedQrLink = document.getElementById('generated-qr-link');
+const generatedQrImage = document.getElementById('generated-qr-image');
+const qrEmptyState = document.getElementById('qr-empty-state');
+const downloadQrLink = document.getElementById('download-qr-link');
+const generateBrowserQrBtn = document.getElementById('generate-browser-qr');
+const generateCurrentStatusBtn = document.getElementById('generate-current-status');
+const useCurrentUrlBtn = document.getElementById('use-current-url');
+const qrGeneratorNote = document.getElementById('qr-generator-note');
+
+function cleanBaseUrl(raw){
+  try{
+    const url = new URL(raw || window.location.href);
+    url.search = '';
+    url.hash = '';
+    return url.toString().replace(/\/$/, '/');
+  }catch(err){
+    return '';
+  }
+}
+
+function buildStatusUrl(base, status){
+  const clean = cleanBaseUrl(base);
+  if(!clean) return '';
+  if(status === 'umum') return clean;
+  const url = new URL(clean);
+  url.searchParams.set('status', status);
+  return url.toString();
+}
+
+function getSelectedQrStatus(){
+  const selected = qrStatusSelect?.value || 'current';
+  return selected === 'current' ? currentStatus : selected;
+}
+
+function makeQrApiUrl(targetUrl){
+  return `https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=16&data=${encodeURIComponent(targetUrl)}`;
+}
+
+function generateBrowserQr(forcedStatus = ''){
+  if(!qrBaseInput) return;
+  const status = forcedStatus || getSelectedQrStatus();
+  const targetUrl = buildStatusUrl(qrBaseInput.value || window.location.href, status);
+  if(!targetUrl){
+    generatedQrLink.textContent = 'Link website belum valid.';
+    return;
+  }
+  const qrUrl = makeQrApiUrl(targetUrl);
+  generatedQrLink.textContent = targetUrl;
+  generatedQrImage.src = qrUrl;
+  generatedQrImage.style.display = 'block';
+  qrEmptyState.style.display = 'none';
+  downloadQrLink.href = qrUrl;
+  downloadQrLink.style.pointerEvents = 'auto';
+  downloadQrLink.style.opacity = '1';
+
+  const label = status === 'umum' ? 'QR umum' : statusData[status]?.title || 'Kategori CiFiRa';
+  qrGeneratorNote.innerHTML = status === 'umum'
+    ? 'QR umum membuka website utama. Setelah itu pengguna dapat memilih warna atau memakai kamera pembaca warna.'
+    : `QR ini menyimpan hasil <strong>${label}</strong>. Saat QR discan ulang, website langsung membuka status tersebut.`;
+}
+
+useCurrentUrlBtn?.addEventListener('click', () => {
+  qrBaseInput.value = cleanBaseUrl(window.location.href);
+});
+
+generateBrowserQrBtn?.addEventListener('click', () => generateBrowserQr());
+generateCurrentStatusBtn?.addEventListener('click', () => {
+  qrStatusSelect.value = 'current';
+  generateBrowserQr(currentStatus);
+});
+
+if(qrBaseInput){
+  qrBaseInput.value = cleanBaseUrl(window.location.href);
+  downloadQrLink.style.pointerEvents = 'none';
+  downloadQrLink.style.opacity = '.55';
+}
